@@ -1,8 +1,10 @@
 const Discord = require('discord.js')
 
-const voiceDiscord = require('@discordjs/voice')
+const { getChannel } = require('./src/services/channel')
 
-const TOKEN = 'OTg0MjI3NDQ0MTM3NTQ1ODE4.GmNGZN.T7_jcwpN-_7FtGzTVenKvPH9ySXCMW7ltpYFV8'
+const { TOKEN } = require('./src/services/token')
+
+const voiceDiscord = require('@discordjs/voice')
 
 const client = new Discord.Client({
   intents: [
@@ -17,29 +19,33 @@ client.on("ready", () => {
 })
 
 client.on("ready", () => {
-  let channel = client.channels.cache.get('890762496665853973');
+  let channels = client.channels.cache;
+
+  let activeChannels = getChannel(channels)
+
+  let random = Math.floor(Math.random() * activeChannels.length)
+  console.log(random)
+
+  let channel = activeChannels[0]
 
   const player = voiceDiscord.createAudioPlayer()
 
-  const resource = voiceDiscord.createAudioResource('C:\\Users\\erikb_8d4r3um\\OneDrive\\Área de Trabalho\\projetos teste\\xarobot\\src\\audio\\xaropinho.mp3')
-  
-  if(channel.members.size >= 1) {
-    const connection = voiceDiscord.joinVoiceChannel({
-      channelId: channel.id,
-      guildId: channel.guild.id,
-      adapterCreator: channel.guild.voiceAdapterCreator,
-    })
+  const resource = voiceDiscord.createAudioResource('C:\\Users\\erikb_8d4r3um\\OneDrive\\Área de Trabalho\\projetos teste\\xarobot\\src\\audio\\uepa.mp3')
 
-    player.play(resource);
-    connection.subscribe(player);
+  const connection = voiceDiscord.joinVoiceChannel({
+    channelId: channel.id,
+    guildId: channel.guild.id,
+    adapterCreator: channel.guild.voiceAdapterCreator,
+  })
 
-    // saída automatica
+  player.play(resource);
+  connection.subscribe(player);
 
-    player.on(voiceDiscord.AudioPlayerStatus.Idle, () => {
-      connection.destroy();
-    });
-  } else {
-    console.log("nao tinha ninguem")
-  }
-})
+  // saída automatica
+
+  player.on(voiceDiscord.AudioPlayerStatus.Idle, () => {
+    connection.destroy()
+  });
+}
+)
 client.login(TOKEN)
