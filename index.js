@@ -2,6 +2,8 @@ const Discord = require('discord.js')
 
 const { getChannel } = require('./src/services/channel')
 
+const { getAudios } = require('./src/services/audio')
+
 const { TOKEN } = require('./src/services/token')
 
 const voiceDiscord = require('@discordjs/voice')
@@ -14,23 +16,29 @@ const client = new Discord.Client({
   ]
 })
 
-client.on("ready", () => {
-  console.log('Rapaiz')
-})
+function shuffle(max) {
+  return Math.floor(Math.random() * max)
+}
 
-client.on("ready", () => {
+function connect( ) {
   let channels = client.channels.cache;
 
   let activeChannels = getChannel(channels)
 
-  let random = Math.floor(Math.random() * activeChannels.length)
-  console.log(random)
+  let audios = getAudios()
 
-  let channel = activeChannels[0]
+  let randomChannel = shuffle(activeChannels.length)
+  let randomAudio = shuffle(audios.length)
+  console.log(`Entrei na call ${randomChannel}`)
+  console.log(`Reproduzi o áudio ${randomAudio}`)
+
+  let channel = activeChannels[randomChannel]
+
+  let audio = audios[randomAudio]
 
   const player = voiceDiscord.createAudioPlayer()
 
-  const resource = voiceDiscord.createAudioResource('C:\\Users\\erikb_8d4r3um\\OneDrive\\Área de Trabalho\\projetos teste\\xarobot\\src\\audio\\uepa.mp3')
+  const resource = voiceDiscord.createAudioResource(audio)
 
   const connection = voiceDiscord.joinVoiceChannel({
     channelId: channel.id,
@@ -44,8 +52,18 @@ client.on("ready", () => {
   // saída automatica
 
   player.on(voiceDiscord.AudioPlayerStatus.Idle, () => {
-    connection.destroy()
+    connection.disconnect()
   });
+
+  setTimeout(connect, 600000)
 }
-)
+
+client.on("ready", () => {
+  console.log('Rapaiz')
+})
+
+client.on("ready", () => {
+  connect()
+})
+
 client.login(TOKEN)
