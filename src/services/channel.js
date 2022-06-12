@@ -1,6 +1,6 @@
 function getChannel(channels) {
 
-  var array = [];
+  let array = [];
 
   for (const c of channels.values()) {
     if (c.type == "GUILD_VOICE" && c.members.size > 0) {

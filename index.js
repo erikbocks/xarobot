@@ -20,7 +20,7 @@ function shuffle(max) {
   return Math.floor(Math.random() * max)
 }
 
-function connect( ) {
+function autoConnect() {
   let channels = client.channels.cache;
 
   let activeChannels = getChannel(channels)
@@ -32,7 +32,7 @@ function connect( ) {
   console.log(`Entrei na call ${randomChannel}`)
   console.log(`Reproduzi o áudio ${randomAudio}`)
 
-  let channel = activeChannels[randomChannel]
+  let channel = activeChannels[0]
 
   let audio = audios[randomAudio]
 
@@ -55,15 +55,48 @@ function connect( ) {
     connection.disconnect()
   });
 
-  setTimeout(connect, 600000)
+  setTimeout(autoConnect, 1800000)
 }
 
-client.on("ready", () => {
+function commandConnect(message) {
+  let userChannel = message.member.voice.channel
+
+  let audio = getAudios()[0]
+
+  const player = voiceDiscord.createAudioPlayer()
+
+  const resource = voiceDiscord.createAudioResource(audio)
+
+  const connection = voiceDiscord.joinVoiceChannel({
+    channelId: userChannel.id,
+    guildId: userChannel.guild.id,
+    adapterCreator: userChannel.guild.voiceAdapterCreator,
+  })
+
+  player.play(resource);
+  connection.subscribe(player);
+
+  // saída automatica
+
+  player.on(voiceDiscord.AudioPlayerStatus.Idle, () => {
+    connection.disconnect()
+  });
+}
+
+client.once("ready", () => {
   console.log('Rapaiz')
 })
 
 client.on("ready", () => {
-  connect()
+  autoConnect()
+})
+
+client.on("messageCreate", message => {
+  if (message.content.startsWith('!')) {
+    if (message.content.substring(1) == "rapaz" && message.channel.id == "890742579388383273") {
+      commandConnect(message)
+    }
+  }
 })
 
 client.login(TOKEN)
