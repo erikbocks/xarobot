@@ -128,8 +128,10 @@ client.on("messageCreate", message => {
 
 client.on('messageCreate', message => {
   if (message.content.startsWith('!') && message.content.substring(1) == "teste") {
-    if (!message.member.hasPermissions('ADMINISTRATOR') && message.channel.id != "890742579388383273") {
-      message.reply('canal errado!')
+    if (!message.member.hasPermissions('ADMINISTRATOR')) {
+      message.reply('você não tem permissão pra utilizar esse comando')
+    } else if (message.channel.id != "890742579388383273") {
+      message.reply('você está usando o comando no canal errado! o certo é `💻・comandos`')
     }
     let channel = message.member.voice.channel
 
