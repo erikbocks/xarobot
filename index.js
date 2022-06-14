@@ -1,11 +1,5 @@
 const Discord = require('discord.js')
 
-const { getChannel } = require('./src/services/channel')
-
-const { getAudios } = require('./src/services/audio')
-
-const { TOKEN } = require('./src/services/token')
-
 const voiceDiscord = require('@discordjs/voice')
 
 const client = new Discord.Client({
@@ -16,25 +10,44 @@ const client = new Discord.Client({
   ]
 })
 
+const { getChannel, getMembers } = require('./src/services/channel')
+
+const { audiosArray } = require('./src/services/audio')
+
+const { TOKEN } = require('./src/services/token')
+
+let allChannels = client.channels.cache;
+
+let botId = '984227444137545818'
+
+function isConnected() {
+
+  let activeChannels = getChannel(allChannels)
+  if (!activeChannels.length) {
+    console.log("não tinha ninguem")
+    setTimeout(autoConnect, 30000)
+    return
+  }
+
+  let members = getMembers(activeChannels)
+
+  let retorno = false
+
+  members.forEach(m => {
+    m.forEach(p => {
+      if (p[0] == botId) {
+        retorno = true
+      }
+    })
+  })
+  return retorno
+}
+
 function shuffle(max) {
   return Math.floor(Math.random() * max)
 }
 
-function autoConnect() {
-  let channels = client.channels.cache;
-
-  let activeChannels = getChannel(channels)
-
-  let audios = getAudios()
-
-  let randomChannel = shuffle(activeChannels.length)
-  let randomAudio = shuffle(audios.length)
-  console.log(`Entrei na call ${randomChannel}`)
-  console.log(`Reproduzi o áudio ${randomAudio}`)
-
-  let channel = activeChannels[0]
-
-  let audio = audios[randomAudio]
+function connect(audio = null, channel = null) {
 
   const player = voiceDiscord.createAudioPlayer()
 
@@ -52,50 +65,79 @@ function autoConnect() {
   // saída automatica
 
   player.on(voiceDiscord.AudioPlayerStatus.Idle, () => {
-    connection.disconnect()
+    connection.destroy()
   });
+}
+
+function autoConnect() {
+
+  if (isConnected()) {
+    return
+  }
+
+  let activeChannels = getChannel(allChannels)
+  let randomChannel = shuffle(activeChannels.length)
+  let randomAudio = shuffle(audiosArray.length)
+
+  let channel = activeChannels[0]
+
+  let audio = audiosArray[randomAudio].sound
+
+  console.log(`Entrei na call: ${randomChannel}`)
+  console.log(`Reproduzi o áudio: ${randomAudio}`)
+  console.log(`No servidor ${channel.guild.name}`)
+
+  connect(audio, channel)
 
   setTimeout(autoConnect, 1800000)
 }
 
-function commandConnect(message) {
-  let userChannel = message.member.voice.channel
+function commandConnect(message, chosenAudio) {
+  if (isConnected()) {
+    return
+  }
 
-  let audio = getAudios()[0]
+  let channel = message.member.voice.channel
 
-  const player = voiceDiscord.createAudioPlayer()
+  let audio = chosenAudio[0].sound
 
-  const resource = voiceDiscord.createAudioResource(audio)
-
-  const connection = voiceDiscord.joinVoiceChannel({
-    channelId: userChannel.id,
-    guildId: userChannel.guild.id,
-    adapterCreator: userChannel.guild.voiceAdapterCreator,
-  })
-
-  player.play(resource);
-  connection.subscribe(player);
-
-  // saída automatica
-
-  player.on(voiceDiscord.AudioPlayerStatus.Idle, () => {
-    connection.disconnect()
-  });
+  connect(audio, channel)
 }
 
-client.once("ready", () => {
+client.on("ready", () => {
   console.log('Rapaiz')
 })
 
+
 client.on("ready", () => {
-  autoConnect()
+  // autoConnect()
 })
 
 client.on("messageCreate", message => {
-  if (message.content.startsWith('!')) {
-    if (message.content.substring(1) == "rapaz" && message.channel.id == "890742579388383273") {
-      commandConnect(message)
+  if (message.content.startsWith('!') ) {
+    if (!message.member.permissions.has('ADMINISTRATOR') && message.channel.id != "890742579388383273" &&!chosenAudio.length) {
+      return message.reply('não encontrei seu comando pateta, se precisar de ajuda digite: `!ajuda`')
     }
+
+    let audioName = message.content.substring(1)
+    let chosenAudio = audiosArray.filter(sound => sound.name.toLowerCase() == audioName)
+
+    commandConnect(message, chosenAudio)
+  }
+})
+
+client.on('messageCreate', message => {
+  if (message.content.startsWith('!') && message.content.substring(1) == "teste") {
+    if (!message.member.hasPermissions('ADMINISTRATOR') && message.channel.id != "890742579388383273") {
+      message.reply('canal errado!')
+    }
+    let channel = message.member.voice.channel
+
+    voiceDiscord.joinVoiceChannel({
+      channelId: channel.id,
+      guildId: channel.guild.id,
+      adapterCreator: channel.guild.voiceAdapterCreator,
+    })
   }
 })
 
