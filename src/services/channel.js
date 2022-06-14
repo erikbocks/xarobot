@@ -1,6 +1,6 @@
 function getChannel(channels) {
 
-  let array = [];
+  let array = []
 
   for (const c of channels.values()) {
     if (c.type == "GUILD_VOICE" && c.members.size > 0) {
@@ -11,6 +11,18 @@ function getChannel(channels) {
   return array
 }
 
+function getMembers(activeChannels) {
+
+  let members = []
+
+  for (const m of activeChannels.values()) {
+    members.push(Array.from(m.members))
+  }
+
+  return members
+}
+
 module.exports = {
-  getChannel
+  getChannel,
+  getMembers
 }
