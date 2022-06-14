@@ -79,7 +79,7 @@ function autoConnect() {
   let randomChannel = shuffle(activeChannels.length)
   let randomAudio = shuffle(audiosArray.length)
 
-  let channel = activeChannels[0]
+  let channel = activeChannels[randomChannel]
 
   let audio = audiosArray[randomAudio].sound
 
@@ -110,12 +110,15 @@ client.on("ready", () => {
 
 
 client.on("ready", () => {
-  // autoConnect()
+  autoConnect()
 })
 
 client.on("messageCreate", message => {
   if (message.content.startsWith('!') ) {
-    if (!message.member.permissions.has('ADMINISTRATOR') && message.channel.id != "890742579388383273" &&!chosenAudio.length) {
+    if (!message.member.permissions.has('ADMINISTRATOR') && message.channel.id != "890742579388383273") {
+      message.reply('você está usando o comando no canal errado! o certo é `💻・comandos`')
+    }
+    if (!chosenAudio.length) {
       return message.reply('não encontrei seu comando pateta, se precisar de ajuda digite: `!ajuda`')
     }
 
