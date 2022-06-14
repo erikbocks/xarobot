@@ -118,12 +118,13 @@ client.on("messageCreate", message => {
     if (!message.member.permissions.has('ADMINISTRATOR') && message.channel.id != "890742579388383273") {
       message.reply('você está usando o comando no canal errado! o certo é `💻・comandos`')
     }
-    if (!chosenAudio.length) {
-      return message.reply('não encontrei seu comando pateta, se precisar de ajuda digite: `!ajuda`')
-    }
 
     let audioName = message.content.substring(1)
     let chosenAudio = audiosArray.filter(sound => sound.name.toLowerCase() == audioName)
+
+    if (!chosenAudio.length) {
+      return message.reply('não encontrei seu comando pateta, se precisar de ajuda digite: `!ajuda`')
+    }
 
     commandConnect(message, chosenAudio)
   }
