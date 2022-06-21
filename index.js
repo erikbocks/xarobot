@@ -114,7 +114,7 @@ client.on("ready", () => {
 })
 
 client.on("messageCreate", message => {
-  if (message.content.startsWith('!') ) {
+  if (message.content.startsWith('!')) {
     if (!message.member.permissions.has('ADMINISTRATOR') && message.channel.id != "890742579388383273") {
       message.reply('você está usando o comando no canal errado! o certo é `💻・comandos`')
       return
