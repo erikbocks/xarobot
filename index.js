@@ -14,11 +14,14 @@ const { getChannel, getMembers } = require('./src/services/channel')
 
 const { audiosArray } = require('./src/services/audio')
 
+const { commandsArray } = require('./src/services/commands')
+
 const { TOKEN } = require('./src/services/token')
 
 let allChannels = client.channels.cache;
 
 let botId = '984227444137545818'
+
 
 function isConnected() {
 
@@ -114,14 +117,14 @@ client.on("ready", () => {
 })
 
 // audio por comando
-client.on("messageCreate", message => {
-  if (message.content.startsWith('!')) {
+client.on("messageCreate",message => {
+  if (message.content.startsWith('!fale')) {
     if (message.guild.id == '890734333055365162' && message.channel.id != "890742579388383273" && !message.member.permissions.has('ADMINISTRATOR')) {
       message.reply('você está usando o comando no canal errado! o certo é `💻・comandos`')
       return
     }
 
-    let audioName = message.content.substring(1).toLowerCase()
+    let audioName = message.content.substring(6).toLowerCase()
     let chosenAudio = audiosArray.filter(sound => sound.name.toLowerCase() == audioName)
 
     if (!chosenAudio.length) {
@@ -129,6 +132,18 @@ client.on("messageCreate", message => {
     }
 
     commandConnect(message, chosenAudio)
+  }
+})
+
+// !ajuda
+client.on("messageCreate", message => {
+  if (message.content == '!ajuda') {
+    const ajuda = new Discord.MessageEmbed()
+      .setColor("YELLOW")
+      .setTitle("**Ajuda do Xarobot**")
+      .setDescription('Oi, eu sou o Xarobot! Fui feito apenas para ser algo engraçado, sendo assim, eu conto com alguns comandos básicos.\n\n !fale rapaz : entra na call, reproduz o famoso audio "rapazz" e desconecta\n !fale tome : entra na call, reproduz o áudio "tome" e desconecta \n !fale filho : entra na call, reproduz o áudio "que isso meu filho, calma" e desconecta')
+
+    message.reply({ embeds: [ajuda] })
   }
 })
 
