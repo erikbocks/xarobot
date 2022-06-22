@@ -108,14 +108,16 @@ client.on("ready", () => {
   console.log('Rapaiz')
 })
 
-
+// autoConnect
 client.on("ready", () => {
-  autoConnect()
+  // autoConnect()
 })
 
+// audio por comando
 client.on("messageCreate", message => {
   if (message.content.startsWith('!')) {
-    if (!message.member.permissions.has('ADMINISTRATOR') && message.channel.id != "890742579388383273") {
+    if (message.guild.id == '890734333055365162' && message.channel.id != "890742579388383273" && !message.member.permissions.has('ADMINISTRATOR')) {
+      console.log(message.guild.id)
       message.reply('você está usando o comando no canal errado! o certo é `💻・comandos`')
       return
     }
@@ -131,15 +133,19 @@ client.on("messageCreate", message => {
   }
 })
 
+// !teste
 client.on('messageCreate', message => {
-  if (message.content.startsWith('!') && message.content.substring(1) == "teste") {
-    if (!message.member.permissions.has('ADMINISTRATOR')) {
-      message.reply('você não tem permissão pra utilizar esse comando')
-      return
-    } else if (message.channel.id != "890742579388383273") {
+  if (message.content == "&teste") {
+    if (message.guild.id == '890734333055365162' && message.channel.id != "890742579388383273") {
       message.reply('você está usando o comando no canal errado! o certo é `💻・comandos`')
       return
     }
+
+    if (!message.member.permissions.has('ADMINISTRATOR')) {
+      message.reply('você não tem permissão pra utilizar esse comando')
+      return
+    }
+
     let channel = message.member.voice.channel
 
     voiceDiscord.joinVoiceChannel({
@@ -150,7 +156,8 @@ client.on('messageCreate', message => {
   }
 })
 
-client.on('message', message => {
+// interação mention
+client.on('messageCreate', message => {
   if (message.mentions.has(botId)) {
     message.reply('oi! meu prefixo é `!`')
   }
