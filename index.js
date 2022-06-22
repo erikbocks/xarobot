@@ -111,7 +111,7 @@ client.on("ready", () => {
 
 // autoConnect
 client.on("ready", () => {
-  // autoConnect()
+  autoConnect()
 })
 
 // audio por comando
