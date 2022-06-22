@@ -151,4 +151,3 @@ client.on('messageCreate', message => {
 })
 
 client.login(TOKEN)
-.listen(process.env.PORT || 5000)
