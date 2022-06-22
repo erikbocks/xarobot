@@ -150,8 +150,10 @@ client.on('messageCreate', message => {
   }
 })
 
-client.on('interactionCreate', message => {
-  message.reply('para de me pingar seu bobocao')
+client.on('message', message => {
+  if (message.mentions.has(botId)) {
+    message.reply('oi! meu prefixo é `!`')
+  }
 })
 
 client.login(TOKEN)
