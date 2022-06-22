@@ -151,4 +151,4 @@ client.on('messageCreate', message => {
 })
 
 client.login(TOKEN)
-Discord.listen(process.env.PORT || 5000)
+.listen(process.env.PORT || 5000)
