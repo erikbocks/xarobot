@@ -117,12 +117,11 @@ client.on("ready", () => {
 client.on("messageCreate", message => {
   if (message.content.startsWith('!')) {
     if (message.guild.id == '890734333055365162' && message.channel.id != "890742579388383273" && !message.member.permissions.has('ADMINISTRATOR')) {
-      console.log(message.guild.id)
       message.reply('você está usando o comando no canal errado! o certo é `💻・comandos`')
       return
     }
 
-    let audioName = message.content.substring(1)
+    let audioName = message.content.substring(1).toLowerCase()
     let chosenAudio = audiosArray.filter(sound => sound.name.toLowerCase() == audioName)
 
     if (!chosenAudio.length) {
