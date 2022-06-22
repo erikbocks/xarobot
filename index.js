@@ -14,8 +14,6 @@ const { getChannel, getMembers } = require('./src/services/channel')
 
 const { audiosArray } = require('./src/services/audio')
 
-const { commandsArray } = require('./src/services/commands')
-
 const { TOKEN } = require('./src/services/token')
 
 let allChannels = client.channels.cache;
