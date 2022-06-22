@@ -150,4 +150,8 @@ client.on('messageCreate', message => {
   }
 })
 
+client.on('interactionCreate', message => {
+  message.reply('para de me pingar seu bobocao')
+})
+
 client.login(TOKEN)
