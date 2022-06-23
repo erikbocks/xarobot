@@ -20,14 +20,12 @@ let allChannels = client.channels.cache;
 
 let botId = '984227444137545818'
 
-
 function isConnected() {
 
   let activeChannels = getChannel(allChannels)
   if (!activeChannels.length) {
     console.log("não tinha ninguem")
-    setTimeout(autoConnect, 30000)
-    return
+    return setTimeout(autoConnect, 30000)
   }
 
   let members = getMembers(activeChannels)
