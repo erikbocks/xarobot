@@ -107,10 +107,10 @@ client.on("ready", () => {
   console.log('Rapaiz')
 })
 
-// autoConnect
-client.on("ready", () => {
-  autoConnect()
-})
+// // autoConnect
+// client.on("ready", () => {
+//   autoConnect()
+// })
 
 // audio por comando
 client.on("messageCreate",message => {
