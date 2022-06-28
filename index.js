@@ -114,7 +114,7 @@ client.on("ready", () => {
 
 // audio por comando
 client.on("messageCreate",message => {
-  if (message.content.startsWith('!fale' || '!FALE')) {
+  if (message.content.startsWith('!') && message.content.substring(1).toLowerCase() == 'fale') {
     if (message.guild.id == '890734333055365162' && message.channel.id != "890742579388383273" && !message.member.permissions.has('ADMINISTRATOR')) {
       message.reply('você está usando o comando no canal errado! o certo é `💻・comandos`')
       return
