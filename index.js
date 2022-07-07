@@ -13,6 +13,7 @@ const client = new Discord.Client({
 const { getChannel, getMembers } = require('./src/services/channel')
 
 const { audiosArray } = require('./src/services/audio')
+const { errorsArray } = require('./src/services/errors')
 
 const { TOKEN } = require('./src/services/token')
 
@@ -21,6 +22,18 @@ let allChannels = client.channels.cache;
 let botId = '984227444137545818'
 
 function isConnected() {
+  let retorno = false
+
+  let members = getMembers(activeChannels)
+
+  members.forEach(m => {
+    m.forEach(p => {
+      if (p[0] == botId) {
+        retorno = true
+      }
+    }
+    )
+  })
 
   let activeChannels = getChannel(allChannels)
   if (!activeChannels.length) {
@@ -28,19 +41,26 @@ function isConnected() {
     return setTimeout(autoConnect, 30000)
   }
 
-  let members = getMembers(activeChannels)
+  return retorno
+}
 
+function isMemberConnected(id) {
   let retorno = false
+
+  let members = getMembers(activeChannels)
 
   members.forEach(m => {
     m.forEach(p => {
-      if (p[0] == botId) {
+      if (p[0] == id) {
         retorno = true
       }
-    })
+    }
+    )
   })
+
   return retorno
 }
+
 
 function shuffle(max) {
   return Math.floor(Math.random() * max)
@@ -91,11 +111,13 @@ function autoConnect() {
   setTimeout(autoConnect, 1800000)
 }
 
-function commandConnect(message, chosenAudio) {
-  if (isConnected()) {
+function commandConnect(message, chosenAudio, userId) {
+  if (isMemberConnected(userId)) {
+    return
+  } else if (isConnected()) {
     return
   }
-
+  
   let channel = message.member.voice.channel
 
   let audio = chosenAudio[0].sound
@@ -113,13 +135,14 @@ client.on("ready", () => {
 // })
 
 // audio por comando
-client.on("messageCreate",message => {
+client.on("messageCreate", message => {
   if (message.content.startsWith('!fale')) {
     if (message.guild.id == '890734333055365162' && message.channel.id != "890742579388383273" && !message.member.permissions.has('ADMINISTRATOR')) {
       message.reply('você está usando o comando no canal errado! o certo é `💻・comandos`')
       return
     }
 
+    let userId = message.author.id
     let audioName = message.content.substring(6).toLowerCase()
     let chosenAudio = audiosArray.filter(sound => sound.name.toLowerCase() == audioName)
 
@@ -127,7 +150,7 @@ client.on("messageCreate",message => {
       return message.reply('não encontrei seu comando pateta, se precisar de ajuda digite: `!ajuda`')
     }
 
-    commandConnect(message, chosenAudio)
+    commandConnect(message, chosenAudio, userId)
   }
 })
 
@@ -143,16 +166,17 @@ client.on("messageCreate", message => {
   }
 })
 
+// interação mention
+client.on('messageCreate', message => {
+  if (message.mentions.has(botId)) {
+    message.reply('oi! meu prefixo é `!`')
+  }
+})
+
 // !teste
 client.on('messageCreate', message => {
   if (message.content == "&teste") {
-    if (message.guild.id == '890734333055365162' && message.channel.id != "890742579388383273") {
-      message.reply('você está usando o comando no canal errado! o certo é `💻・comandos`')
-      return
-    }
-
-    if (!message.member.permissions.has('ADMINISTRATOR')) {
-      message.reply('você não tem permissão pra utilizar esse comando')
+    if (message.guild.id == '890734333055365162' && !message.member.permissions.has('ADMINISTRATOR')) {
       return
     }
 
@@ -163,13 +187,6 @@ client.on('messageCreate', message => {
       guildId: channel.guild.id,
       adapterCreator: channel.guild.voiceAdapterCreator,
     })
-  }
-})
-
-// interação mention
-client.on('messageCreate', message => {
-  if (message.mentions.has(botId)) {
-    message.reply('oi! meu prefixo é `!`')
   }
 })
 
