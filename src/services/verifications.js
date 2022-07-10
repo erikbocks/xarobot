@@ -2,7 +2,6 @@ const {client} = require('../util/client')
 const { getChannel, getMembers } = require('../util/channel')
 
 let allChannels = client.channels.cache
-// let botId = '984227444137545818'
 require('dotenv').config()
 
 function memberConnected(userId) {
