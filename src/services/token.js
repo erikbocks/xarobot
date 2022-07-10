@@ -1,5 +1,0 @@
-const TOKEN = 'OTg0MjI3NDQ0MTM3NTQ1ODE4.GmNGZN.T7_jcwpN-_7FtGzTVenKvPH9ySXCMW7ltpYFV8'
-
-module.exports = {
-  TOKEN
-}
