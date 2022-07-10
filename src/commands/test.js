@@ -3,7 +3,7 @@ const { memberConnected } = require('../services/verifications')
 
 function test(message) {
 
-  if (!memberConnected(message.author.id)) {
+  if (memberConnected(message.author.id) || !message.member.permissions.has('ADMINISTRATOR')) {
     return message.reply('você nao ta em nenhum canal de voz seu bobolhudo!')
   }
 

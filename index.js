@@ -55,7 +55,7 @@ client.on('messageCreate', message => {
 client.on('messageCreate', message => {
   if (message.content == "&teste") {
     if (message.guild.id == '890734333055365162' && !message.member.permissions.has('ADMINISTRATOR')) {
-      return
+      return message.reply('esse é um comando pra administradores!')
     }
     test(message)
   }})
