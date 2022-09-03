@@ -12,15 +12,9 @@ client.on("ready", () => {
   console.log('Rapaiz')
 })
 
-// // autoConnect
-// client.on("ready", () => {
-//   autoConnect()
-// })
-
-client.on("messageCreate", message => {
-  if (message.content.startsWith('!auto')) {
-    autoConnect()
-  }
+// autoConnect
+client.on("ready", () => {
+  autoConnect()
 })
 
 // audio por comando
