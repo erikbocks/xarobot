@@ -12,10 +12,10 @@ client.on("ready", () => {
   console.log('Rapaiz')
 })
 
-// autoConnect
-client.on("ready", () => {
-  autoConnect()
-})
+// // autoConnect
+// client.on("ready", () => {
+//   autoConnect()
+// })
 
 client.on("messageCreate", message => {
   if (message.content.startsWith('!auto')) {
