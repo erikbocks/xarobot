@@ -13,9 +13,9 @@ client.on("ready", () => {
 })
 
 // autoConnect
-// client.on("ready", () => {
-//   autoConnect()
-// })
+client.on("ready", () => {
+  autoConnect()
+})
 
 // audio por comando
 client.on("messageCreate", message => {
