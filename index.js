@@ -17,6 +17,11 @@ client.on("ready", () => {
   autoConnect()
 })
 
+client.on("messageCreate", message => {
+  if (message.content.startsWith('!auto')) {
+    autoConnect()
+  }
+})
 // audio por comando
 client.on("messageCreate", message => {
   if (message.content.startsWith('!fale')) {
