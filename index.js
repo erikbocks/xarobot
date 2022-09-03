@@ -22,6 +22,7 @@ client.on("messageCreate", message => {
     autoConnect()
   }
 })
+
 // audio por comando
 client.on("messageCreate", message => {
   if (message.content.startsWith('!fale')) {
