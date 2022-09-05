@@ -1,18 +1,20 @@
 const { connect } = require('../util/connect')
 const { memberConnected, botConnected} = require('../services/verifications')
 
-function commandConnect(message, audio, userId) {
+function commandConnect(interaction, audio, userId) {
 
-  if (memberConnected(userId)) {
+  if (!memberConnected(userId)) {
     if (botConnected()) {
-      return
+      return 
     }
-    return message.reply('você nao ta em nenhum canal de voz seu bobolhudo!')
+    interaction.reply("você nao tá em nenhum canal de voz seu bobolhudo")
+    return
   }
   
-  let channel = message.member.voice.channel
+  let channel = interaction.member.voice
 
-  connect(audio, channel)
+  connect(audio, channel.channelId, channel.guild)
+  return interaction.reply({ content: "executado!", ephemeral: true })
 }
 
 module.exports = {

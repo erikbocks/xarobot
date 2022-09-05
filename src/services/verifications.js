@@ -5,14 +5,14 @@ let allChannels = client.channels.cache
 require('dotenv').config()
 
 function memberConnected(userId) {
-  let retorno = true
+  let retorno = false
   let activeChannels = getChannel(allChannels)
   let members = getMembers(activeChannels)
 
   members.forEach(m => {
     m.forEach(p => {
       if (p[0] == userId) {
-        retorno = false
+        retorno = true
       }
     }
     )
@@ -27,8 +27,7 @@ function botConnected() {
   let members = getMembers(activeChannels)
 
   if (!activeChannels.length) {
-    console.log("não tinha ninguem")
-    return setTimeout(autoConnect, 30000)
+    return 
   }
 
   //verificação do bot
@@ -45,6 +44,6 @@ function botConnected() {
 }
 
 module.exports = {
-  memberConnected,
-  botConnected
+  botConnected,
+  memberConnected
 }

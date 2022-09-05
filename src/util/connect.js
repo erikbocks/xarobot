@@ -1,13 +1,13 @@
 const { voiceDiscord} = require('./client')
 
-function connect(audio = null, channel = null) {
+function connect(audio = null, channelId = null, channelGuild = null) {
 
   const player = voiceDiscord.createAudioPlayer() 
 
   const connection = voiceDiscord.joinVoiceChannel({
-    channelId: channel.id,
-    guildId: channel.guild.id,
-    adapterCreator: channel.guild.voiceAdapterCreator,
+    channelId: channelId,
+    guildId: channelGuild.id,
+    adapterCreator: channelGuild.voiceAdapterCreator,
   })
 
   connection.subscribe(player);
